@@ -1,46 +1,50 @@
-# COMPILE AND RUN WITH
+# TRANSLATION BASED BLOCK CIPHER
+
+## COMPILE AND RUN WITH
 
 cd Source
+
 g++ -I ../Headers/ tbbc.cpp
+
 ./a.out
 
 ------------------------------------------------------------------------------
 
-# FILES
+## FILES
 
 /Source
--> tbbc.cpp
-   // main
+- tbbc.cpp
+  // main
 
 /Headers
--> tbbc.h
--> tbbc.hxx
-   // define a class TBBC which implements an identity cipher
+- tbbc.h
+- tbbc.hxx
+  // define a class TBBC which implements an identity cipher
 
--> tbbcAES_128m8s.h
--> tbbcAES_128m8s.hxx
+- tbbcAES_128m8s.h
+- tbbcAES_128m8s.hxx
    // define a class which implement AES
-   // - message length is fixed to 128
-   // - key values can be multiple of 32 and is fixed at type definition
-   // - sbox size is fixed to 8
-   // - the number of rounds is fixed at type definition
+   - message length is fixed to 128
+   - key values can be multiple of 32 and is fixed at type definition
+   - sbox size is fixed to 8
+   - the number of rounds is fixed at type definition
 
--> tbbcBUNNY_24m24k.h
--> tbbcBUNNY_24m24k.hxx
+- tbbcBUNNY_24m24k.h
+- tbbcBUNNY_24m24k.hxx
    // define a class which implement BUNNY (a toy cipher) 
-   // with 24 bits messages and 6 bit sbox
-   // define a class which implement BUNNY
-   // - message length is fixed to 24
-   // - key length is fixed to  24
-   // - sbox size is fixed at type definition
-   // - the number of rounds is fixed at type definition
+   with 24 bits messages and 6 bit sbox
+   define a class which implement BUNNY
+   - message length is fixed to 24
+   - key length is fixed to  24
+   - sbox size is fixed at type definition
+   - the number of rounds is fixed at type definition
 
--> myFunctions.h
-   // defines common functions
+- myFunctions.h
+  // defines common functions
 
 ------------------------------------------------------------------------------
 
-# INSTRUCTION
+## INSTRUCTION
 
 To define a new Translation Based Block Cipher, define the new classes in a
 .h and .hxx file.
@@ -50,10 +54,11 @@ e.g. the sbox() and its inverse.
 
 See headers files as an example.
 
-//----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
-CLASSES SCHEME
+## CLASSES SCHEME
 
+```
 class TBBC {
   public:
     typedef bitset<nb_msg>       msgType ;
@@ -135,5 +140,5 @@ private:
   virtual msgType addRoundKey (msgType m, msgType k) ;
   virtual void keySchedule(keyType k) ;
 } ;
-
+```
 
