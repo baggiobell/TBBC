@@ -1,0 +1,54 @@
+/**************************/
+/* Emanuele Bellini, 2012 */
+/**************************/
+
+#include "tbbc.h"
+
+//! TBBCBUNNY CLASS
+/*!
+This class allows to instantiate a block cipher working on 24 bits, 
+with a master key of 24 bits, whose s-boxes take input of nb_sbox bits, 
+and with nround rounds.
+*/
+template <unsigned nb_sbox, unsigned nround>
+class TBBCBUNNY : public TBBC<24,24,nb_sbox,nround> {
+public:
+
+  typedef TBBC<24,24,nb_sbox,nround> TBBC2424 ;
+
+  typedef typename TBBC2424::msgType      msgType ;
+  typedef typename TBBC2424::keyType      keyType ;
+  typedef typename TBBC2424::sboxType     sboxType ;
+  typedef typename TBBC2424::wordType     wordType ;
+  typedef typename TBBC2424::roundkeyType roundkeyType ;
+
+  //! Contains the round keys
+  roundkeyType rk;
+
+  // CONSTRUCTORS
+  TBBCBUNNY() ;
+
+  // CODING FUNCTIONS
+  virtual msgType encode(msgType m, keyType k) ;
+  virtual msgType decode(msgType m, keyType k) ;
+
+private:
+
+  // SBOX
+  virtual sboxType sbox( unsigned nbox, sboxType x ) ;
+  virtual sboxType sboxInverse( unsigned nbox, sboxType x ) ;
+
+  // MIXING LAYER
+  virtual msgType mixingLayer (msgType m ) ;
+  virtual msgType mixingLayerInverse (msgType m ) ;
+
+  // ADD ROUND KEY
+  virtual msgType addRoundKey (msgType m, msgType k) ;
+
+  // KEY SCHEDULE
+  virtual void keySchedule(keyType k) ;
+
+} ;
+
+
+#include "tbbcBUNNY_24m24k.hxx"

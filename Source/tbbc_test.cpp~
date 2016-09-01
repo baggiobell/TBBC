@@ -1,0 +1,309 @@
+// tbbc_test.cpp : main function to test tbbc.cpp
+//
+
+//#ifdef WIN32
+  //  #include "stdafx.h" // works for Visual C++ 2010
+//#endif
+
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <iomanip> // to use the function setw()
+#include <bitset> // to use the Bitset class
+#include <math.h>
+#include <sstream> // used in ucharToString() to convert from unsigned char to string
+
+#include "tbbc.h" //definition of the class TBBC
+//#include "myfunction.h" //defines other functions used within the program
+
+#include "tbbc24m24k.h" //definition of the class TBBC24m24k
+#include "tbbcAES.h" //definition of the class TBBCAES
+
+using namespace std;
+
+
+typedef TBBC24m24k<6,1> BlockCipher ; //define a type BlockCipher which is an instance of TBBC24m24k
+typedef TBBCAES<128,10> AES ; //define a type AES which is an instance of TBBCAES
+
+int main(int argc, char* argv[]) {
+	//instantiation of a TBBC, first create a type, then an instance of that type
+
+//	unsigned const nb_msg = 24 ;
+//	unsigned const nb_key = 24 ;
+//	unsigned const nb_sbox = 6 ;
+//	unsigned const nround = 1 ;
+
+	cout << "|---------------------------------------|\n"
+	     << "|---------------------------------------|\n"
+	     << "|------------ Welcome to... ------------|\n"
+	     << "|---------------------------------------|\n"
+	     << "|----_____-----_--------_------___------|\n"
+	     << "|---|__  _|--|| \\-----|| \\----//  \\-----|\n"
+	     << "|------||----||_/-----||_/---||---------|\n"
+	     << "|------||----|| \\-----|| \\---||---------|\n"
+	     << "|------||----||  \\----||  \\--||---------|\n"
+	     << "|-----/__\\ . ||__/- . ||__/ . \\___/ . --|\n"
+	     << "|---------------------------------------|\n"
+       << "|---------------------------------------|\n"
+	     << "Insert your Block Cipher parameters:\n\n"  ;
+
+	BlockCipher phi ; //declare a variable of the type "BlockCipher"
+
+  BlockCipher::msgType m (string("000000111111000001000010")) ; //defines a variable which contains 24 bits
+	BlockCipher::msgType c ; //defines an empty variable which contains 24 bits
+	BlockCipher::keyType k (string("001011001110001010011000")) ; //defines a variable which contains 24 bits
+	BlockCipher::sboxType w (string("110111")) ;
+
+	///////////////////////////////
+
+	//AES instantiation
+
+	AES aes ; //declare a variable of the type "BlockCipher2"
+
+  AES::msgType msg (string("00001111000101010111000111001001010001111101100111101000010110010000110010110111101011011101011010101111011111110110011110011000")) ; //defines a variable which contains 128 bits
+	AES::msgType cip ; //defines an empty variable which contains 128 bits
+	AES::keyType mkey (string("00001111000101010111000111001001010001111101100111101000010110010000110010110111101011011101011010101111011111110110011110011000")) ; //defines a variable which contains 128 bits
+	AES::sboxType word (string("10101010")) ;
+
+	////////////////////////////////
+	cout << endl ;
+
+	//cout << "----------------------------------------------------" << endl ;
+	//cout << "verifica dell' S-box di AES e dell'inversa: " << endl ;
+	////to test the inverse for each possible 8-bit vector in F_2^8
+	//for (int i = 0 ; i < 256 ; ++i){
+	//	word = BlockCipher2::sboxType (i) ;
+	//	cout << word << " -> " << aes.AES_sbox(word) << " -> " << aes.AES_sbox_Inv(aes.AES_sbox(word)) << endl ;
+	//}
+	//verifica dell'sBox di AES
+	cout << "----------------------------------------------------" << endl ;
+	cout << "verifica dell'S-box STEP di AES: " << endl ;
+	cout << "        m = " << msg << endl ;
+	cout << "     S(m) = " << aes.sBox(msg) << endl ;
+	cout << "S^(-1)(m) = " << aes.sBoxInverse(aes.sBox(msg)) << endl ;
+
+    //verifica della funzione mixingLayer e mixingLayerInverse
+	cout << "----------------------------------------------------" << endl ;
+	cout << "verifica del MixingLayer e mixingLayerInverse STEP: " << endl ;
+	cout << "                       m = " << m << endl ;
+	cout << "              Lambda * m = " << phi.mixingLayer(m) << endl ;
+	cout << "Lambda^(-1) * Lambda * m = " << phi.mixingLayerInverse(phi.mixingLayer(m)) << endl ;
+
+	//verifica della funzione keySchedule di AES
+	cout << "----------------------------------------------------" << endl ;
+	cout << "verifica del keySchedule STEP: " << endl ;
+	cout << "master key = " << mkey << endl ;
+	//for (unsigned i = 0 ; i < nround + 1 ; ++i ) cout << aes.rk[i] << endl ;
+	aes.keySchedule(mkey) ;
+	//for (unsigned i = 0 ; i < nround + 1 ; ++i ) cout << aes.rk[i] << endl ;
+
+	//verifica della funzione MoveBits
+	cout << "----------------------------------------------------" << endl ;
+	cout << "verifica della funzione MoveBits: " << endl ;
+	msg = hexTo<bitset<128> >("00aabbcc001122330044556600ddeeff") ;
+	cout << "                msg = " << bitsetToHex(msg) << endl ;
+	cout << "MoveBits(msg,0,8,4) = " << bitsetToHex(MoveBits(msg,0,8,4)) << endl ;
+
+	//verifica della funzione 'shiftRows'
+	cout << "----------------------------------------------------" << endl ;
+	msg = hexTo<bitset<128> >("00aabbcc001122330044556600ddeeff") ;
+	cout << "verifica della funzione 'shiftRows': " << endl ;
+	cout << "            msg = " << bitsetToHex(msg) << endl ;
+	cout << "   shiftRows(m) = " << bitsetToHex(aes.shiftRows(msg)) << endl ;
+	cout << "shiftRows^-1(c) = " << bitsetToHex(aes.shiftRowsInv(aes.shiftRows(msg))) << endl ;
+
+	//verifica della funzione 'mixColumns'
+	cout << "----------------------------------------------------" << endl ;
+	msg = hexTo<bitset<128> >("db13534500000000db13534500000000") ;
+	cout << "verifica della funzione 'mixColumns': " << endl ;
+
+	cout << "             msg = " << msg << endl ;
+	cout << "   mixColumns(m) = " << aes.mixColumns(msg) << endl ;
+	cout << "mixColumns^-1(c) = " << aes.mixColumnsInv(aes.mixColumns(msg)) << endl << endl ;
+
+
+	cout << "             msg = " << bitsetToHex(msg) << endl ;
+	cout << "   mixColumns(m) = " << bitsetToHex(aes.mixColumns(msg)) << endl ;
+	cout << "mixColumns^-1(c) = " << bitsetToHex(aes.mixColumnsInv(aes.mixColumns(msg))) << endl ;
+
+	//verifica della funzione 'encode'/'decode'di AES
+	cout << "----------------------------------------------------" << endl ;
+	cout << "verifica della funzione 'encode'/'decode' di AES: " << endl ;
+	msg  = hexTo<bitset<128> >("0f1571c947d9e8590cb7add6af7f6798") ;
+	mkey = hexTo<bitset<128> >("f6cc34cdc555c5418254260203ad3ecd") ;
+	cout << "          k = " << bitsetToHex(mkey) << endl ;
+	cip = aes.encode(msg,mkey) ;
+	cout << "          m = " << bitsetToHex(msg) << endl ;
+	cout << "     aes(m) = " << bitsetToHex(cip) << endl ;
+	cout << "aes^(-1)(c) = " << bitsetToHex(aes.decode(cip,mkey)) << endl ;
+
+	//verifica della funzione 'encode'/'decode'di AES
+	cout << "----------------------------------------------------" << endl ;
+	cout << "----------------------------------------------------" << endl ;
+	cout << "----------------------------------------------------" << endl ;
+	cout << "verifica della funzione 'encode'/'decode' di AES: " << endl ;
+	msg  = hexTo<bitset<128> >("6bc1bee22e409f96e93d7e117393172a") ;
+	mkey = hexTo<bitset<128> >("2b7e151628aed2a6abf7158809cf4f3c") ;
+	cout << "          k = " << bitsetToHex(mkey) << endl ;
+	cip = aes.encode(msg,mkey) ;
+	cout << "          m = " << bitsetToHex(msg) << endl ;
+	cout << "     aes(m) = " << bitsetToHex(cip) << endl ;
+	cout << "aes^(-1)(c) = " << bitsetToHex(aes.decode(cip,mkey)) << endl ;
+	cout << "----------------------------------------------------" << endl ;
+	cout << "----------------------------------------------------" << endl ;
+	cout << "----------------------------------------------------" << endl ;
+
+	//verifica della funzione 'encode'/'decode' for TBBC (Bunny)
+	cout << "----------------------------------------------------" << endl ;
+	cout << "verifica della funzione 'encode'/'decode' di TBBC: " << endl ;
+	cout << "          k = " << bitsetToHex(k) << endl ;
+	cout << "          m = " << bitsetToHex(m) << endl ;
+	c = phi.encode(m,k) ;
+	cout << "     phi(m) = " << bitsetToHex(c) << endl ;
+	cout << "phi^(-1)(c) = " << bitsetToHex(phi.decode(c,k)) << endl ;
+
+    //verifica della funzione 'hexTo'
+	cout << "----------------------------------------------------" << endl ;
+	cout << "verifica della funzione 'hexTo': " << endl ;
+	cout << "          abc0 = " << hexTo<bitset<16> >("abc0") << endl ;
+    cout << "verifica della funzione 'bitsetToHex': " << endl ;
+	cout << "  11111 = " << bitsetToHex(bitset<5> (string("11111"))) << endl ;
+	cout << "  111111 = " << bitsetToHex(bitset<6> (string("111111"))) << endl ;
+	cout << "  1111111 = " << bitsetToHex(bitset<7> (string("1111111"))) << endl ;
+
+    //verifica della funzione 'stringToUchar'
+	cout << "----------------------------------------------------" << endl ;
+	cout << "verifica della funzione 'stringtoUchar': " << endl ;
+	unsigned char u[4] = { '1' , 'a' , '0' , '0' } ;
+	string ss = "0a12a0ff" ;
+	cout << "ss = " << ss << endl ;
+	for (unsigned i = 0 ; i < 4 ; ++i)
+	  cout << "u[i] = " << (int)u[i] << endl ;
+
+
+	stringToUcharB(ss,u) ;
+    cout << "Bert: " << endl ;
+    for (unsigned i = 0 ; i < 4 ; ++i)
+	  cout << "u[i] = " << (int)u[i] << endl ;
+
+	stringToUchar(ss,u) ;
+
+    cout << "Ema: " << endl ;
+    for (unsigned i = 0 ; i < 4 ; ++i)
+	  cout << "u[i] = " << (int)u[i] << endl ;
+
+	//verifica della funzione 'printParameter'
+	/*cout << "----------------------------------------------------" << endl ;
+	cout << "verifica della funzione 'printParameter': " << endl ;
+	phi.printParameter() ;
+	*/
+
+	//verifica dell' sBox 1
+	/*cout << "----------------------------------------------------" << endl ;
+	cout << "verifica dell' S-box di tipo 1 e dell'inversa: " << endl ;
+	cout << w << " -> " << phi.s1(w) << " -> " << phi.s1Inv(phi.s1(w)) << endl ;
+	cout << "verifica dell' S-box di tipo 2 e dell'inversa: " << endl ;
+	cout << w << " -> " << phi.s2(w) << " -> " << phi.s2Inv(phi.s2(w)) << endl ;
+	cout << "verifica dell' S-box di tipo 3 e dell'inversa: " << endl ;
+	cout << w << " -> " << phi.s3(w) << " -> " << phi.s3Inv(phi.s3(w)) << endl ;
+	cout << "verifica dell' S-box di tipo 4 e dell'inversa: " << endl ;
+	cout << w << " -> " << phi.s4(w) << " -> " << phi.s4Inv(phi.s4(w)) << endl ;
+	*/
+
+	//verifica della funzione 'extract'
+    cout << "----------------------------------------------------" << endl ;
+	cout << "verifica della funzione 'extractBlock':" << endl ;
+	cout << "m = " << m << endl ;
+	cout << "i primi   6 bit di m sono: " << phi.extractBlock(0,m) << endl ;
+	cout << "i secondi 6 bit di m sono: " << phi.extractBlock(1,m) << endl ;
+	cout << "i terzi   6 bit di m sono: " << phi.extractBlock(2,m) << endl ;
+	cout << "i quarti  6 bit di m sono: " << phi.extractBlock(3,m) << endl ;
+
+
+	//verifica della funzione 'extractWord'
+	/*cout << "----------------------------------------------------" << endl ;
+	cout << "verifica della funzione 'extractWord':" << endl ;
+	cout << "key = " << mkey << endl ;
+	cout << "i primi   32 bit di k sono: " << aes.extractWord( 0,mkey) << endl ;
+	cout << "i secondi 32 bit di k sono: " << aes.extractWord(32,mkey) << endl ;
+	cout << "i terzi   32 bit di k sono: " << aes.extractWord(64,mkey) << endl ;
+	cout << "i quarti  32 bit di k sono: " << aes.extractWord(96,mkey) << endl ;*/
+
+
+
+	//verifica dell'sBox
+	/*cout << "----------------------------------------------------" << endl ;
+	cout << "verifica dell'S-box STEP: " << endl ;
+	cout << "   m = " << m << endl ;
+	cout << "S(m) = " << phi.sBox(m) << endl ;
+	*/
+
+	//verifica della funzione 'insertBlock'
+	/*cout << "----------------------------------------------------" << endl ;
+	cout << "verifica della funzione 'insertBlock':" << endl ;
+	cout << "           m = " << m << endl ;
+	cout << "           w = " << w << endl ;
+	cout << "copy(m,0,w) = " << phi.insertBlock(m,0,w) << endl ;
+	*/
+
+	//prova moltiplicazione vettore[3] x matrice[3x3]
+	/*cout << "----------------------------------------------------" << endl ;
+	cout << "prova moltiplicazione vettore[3] x matrice[3x3]:" << endl ;
+	bitset<9> b;
+	bitset<3> cc;
+	bitset<3> d;
+	b = bitset<9> (string("110011101")) ;
+	cc = bitset<3> (string("110")) ;
+	cout << cc << " * " << b[8]<< b[7] << b[6] << endl ;
+	cout << "      " << b[5] << b[4] << b[3] << endl ;
+	cout << "      " << b[2] << b[1] << b[0] << endl ;
+	*/
+
+	// Product (vector x matrix)
+	/*for ( unsigned i = 0 ; i < 3 ; ++i ){
+		d[i] = 0 ;
+		for ( unsigned j = 0 ; j < 3 ; ++j ) {
+			cout << d[i] << " ^ " << cc[i] << " & " << b[i+j*3] << " = ";
+			d[i] = d[i] ^ ( cc[j] & b[i+j*3] ) ;
+			cout << d[i] << endl ;
+		}
+	}
+	cout << "c * b = " << d << endl ;
+	*/
+
+	//verifica della funzione mixingLayer e mixingLayerInverse
+	/*cout << "----------------------------------------------------" << endl ;
+	cout << "verifica del MixingLayer e mixingLayerInverse STEP: " << endl ;
+	cout << "                       m = " << m << endl ;
+	cout << "              Lambda * m = " << phi.mixingLayer(m) << endl ;
+	cout << "Lambda^(-1) * Lambda * m = " << phi.mixingLayerInverse(phi.mixingLayer(m)) << endl ;
+	*/
+	//verifica della funzione keySchedule
+	/*cout << "----------------------------------------------------" << endl ;
+	cout << "verifica del keySchedule STEP: " << endl ;
+	for (unsigned i = 0 ; i < nround + 1 ; ++i ) cout << phi.rk[i] << endl ;
+	phi.keySchedule(k) ;
+	for (unsigned i = 0 ; i < nround + 1 ; ++i ) cout << phi.rk[i] << endl ;
+	*/
+
+	//to find the inverse of vv table
+	/*cout << "----------------------------------------------------" << endl ;
+	int vv [64] = {  4,  5, 34, 50, 33, 22, 47,  9, 16, 54, 29, 42, 46, 62, 11, 10,
+									36, 55,  1,  3, 43, 14, 38, 18,  8, 60,  6, 35, 28, 30, 58, 41,
+									24, 31, 39, 49, 12, 61, 27, 59,  0, 32, 20, 37, 15, 25, 51, 52,
+									45, 56, 17, 21, 19, 48,  7, 53, 13, 63, 26, 57, 40, 44, 23,  2  };
+	for (unsigned i = 0 ; i < 64 ; ++i){
+		for (unsigned j = 0 ; j < 64 ; ++j){
+			if (vv[j] == i) {
+				cout << j << ", " ;
+
+			}
+		}
+	}
+	*/
+	system("pause") ; //for pausing before end in windows ;)
+
+	return 0 ;
+}
+
