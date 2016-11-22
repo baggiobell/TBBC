@@ -29,7 +29,6 @@ g++ -I ../Headers/ tbbc.cpp
    - key values can be multiple of 32 and is fixed at type definition
    - sbox size is fixed to 8
    - the number of rounds is fixed at type definition
-   - sbox type (id) is fixed at type definition
 
 - tbbcBUNNY_24m24k.h
 - tbbcBUNNY_24m24k.hxx

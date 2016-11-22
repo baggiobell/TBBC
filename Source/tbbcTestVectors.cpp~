@@ -1,9 +1,14 @@
 /**************************/
-/* Emanuele Bellini, 2012 */
+/* Emanuele Bellini, 2016 */
 /**************************/
 
-// tbbc.cpp : main function
-//
+/* tbbcTestVectors.cpp : main function
+ *
+ * COMPILE:
+   g++ -I ../Headers/ tbbcTestVectors.cpp -o TestVectors
+ * RUN:
+   ./TestVectors 
+ */
 
 //#ifdef WIN32
   //  #include "stdafx.h" // works for Visual C++ 2010
@@ -17,46 +22,119 @@
 #include <bitset> // to use the Bitset class
 #include <math.h>
 #include <sstream> // used in ucharToString() to convert from unsigned char to string
+#include <cstring>
 
 #include "tbbc.h" //definition of the class TBBC
 #include "tbbcAES_128m8s.h"   //definition of the class TBBCAES
-#include "tbbcBUNNY_24m24k.h" //definition of the class TBBCBUNNY
+
+#include "getopt.c"
+//#include <getopt.h>
 
 using namespace std;
 
 
 //instantiation of a TBBC, first create a type, then an instance of that type
-
-typedef TBBCAES<128,10> AES_128_10 ; // define a type AES 
+/*
+typedef TBBCAES<128,10,0> AES_128_10 ; // define a type AES 
                                      // which is an instance of TBBCAES
                                      // 128 is key size
                                      // 10 is number of rounds
-typedef TBBCAES<192,12> AES_192_12 ; // define a type AES 
-typedef TBBCAES<256,14> AES_256_14 ; // define a type AES
-typedef TBBCAES<64,5> AES_64_10 ; // define a type AES
+typedef TBBCAES<192,12,0> AES_192_12 ; // define a type AES 
+typedef TBBCAES<256,14,0> AES_256_14 ; // define a type AES
+typedef TBBCAES<64,5,0> AES_64_10 ; // define a type AES
+*/
+void print_usage() {
+    cout << "|---------------------------------------|\n"
+         << "|---------------------------------------|\n"
+	       << "|------------ Welcome to... ------------|\n"
+	       << "|---------------------------------------|\n"
+	       << "|----______---__-------__------___------|\n"
+         << "|---|__  __|-|| \\-----|| \\----//  \\-----|\n"
+	       << "|------||----||_/-----||_/---||---------|\n"
+	       << "|------||----|| \\-----|| \\---||---------|\n"
+	       << "|------||----||  \\----||  \\--||---------|\n"
+	       << "|-----/__\\ . ||__/- . ||__/ . \\___/ . --|\n"
+	       << "|---------------------------------------|\n"
+	       << "|--- TRANSLATION-BASED BLOCK CIPHERS ---|\n"
+	       << "|---------------------------------------|\n"
+         << "|---------------------------------------|\n\n" ;
+    cout << "Program to generate AES Test Vectors with\n"
+         << "- Original AES-128, AES-192, AES-256\n"
+         << "- Personalized AES\n\n";
+    cout << "Type -h for help\n\n";
+}
 
-typedef TBBCBUNNY<6,5> BUNNY_5 ; // define a type BUNNY
+int main(int argc,char* argv[]) {
 
-typedef TBBC<16,32,3,3> TBBC_16_32_3_3 ; // define a type TBBC
+// DEFAULT VALUES
+  unsigned ksize = 128;
+  unsigned nround = 10;
+  unsigned sboxid = 0;
 
-int main(int argc, char* argv[]) {
-	cout << "|---------------------------------------|\n"
-	     << "|---------------------------------------|\n"
-	     << "|------------ Welcome to... ------------|\n"
-	     << "|---------------------------------------|\n"
-	     << "|----______---__-------__------___------|\n"
-	     << "|---|__  __|-|| \\-----|| \\----//  \\-----|\n"
-	     << "|------||----||_/-----||_/---||---------|\n"
-	     << "|------||----|| \\-----|| \\---||---------|\n"
-	     << "|------||----||  \\----||  \\--||---------|\n"
-	     << "|-----/__\\ . ||__/- . ||__/ . \\___/ . --|\n"
-	     << "|---------------------------------------|\n"
-	     << "|--- TRANSLATION-BASED BLOCK CIPHERS ---|\n"
-	     << "|---------------------------------------|\n"
-       << "|---------------------------------------|\n\n" ;
+  // CHECK INPUT
+  int option = 0;
+  opterr = 0;
+
+  while ((option = getopt (argc, argv, "hl:r:s:")) != -1)
+    switch (option)
+    {
+      case 'h':
+        cout << "\nOPTIONS:\n"
+             << "--------\n\n"
+           //<< "-k       [key_hex_value]\n\n"
+           //<< "-m       [key_hex_value]\n\n"
+           << "-l       [key_size]\n"
+           << "         multiple of 32, e.g. 128, 192, 256\n\n"
+           << "-r       [number_of_rounds]\n"
+           << "         up to 16\n\n"
+           << "-s       [sbox_id]\n"
+           << "         can be 0 or 1\n\n"
+           << "\n\n";
+           return 0;
+        break;
+      case 'l':
+        cout << "l " << atoi(optarg) << endl;
+        ksize = atoi(optarg);
+        break;
+      case 'r':
+        cout << "r " << optarg << endl;
+        nround = atoi(optarg);
+        break;
+      case 's':
+        cout << "s " << optarg << endl;
+        sboxid = atoi(optarg);
+        break;
+      case '?':
+        if (optopt == 'l' ||
+            optopt == 'r' ||
+            optopt == 's' 
+           )
+          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+        else if (isprint (optopt))
+          fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+        else
+          fprintf (stderr,
+                   "Unknown option character `\\x%x'.\n",
+                   optopt);
+        return 1;
+    }
+
+  if (argc == 1) { print_usage(); return 0 ; }
+
+  
+  cout << "Parameters:\n"
+       << "KEY SIZE = " << ksize << endl
+       << "N ROUNDS = " << nround << endl
+       << "SBOX ID  = " << sboxid << endl << endl ;
+
+  
+
+  typedef TBBCAES<ksize,nround,sboxid> AES ; // define a type AES 
+
+  return 0;
 
 	////////////////////////////////////////////////////////////////////////////
-
+/*
 	//AES_128_10 instantiation
 	AES_128_10 aes_128_10 ;
 
@@ -119,7 +197,7 @@ int main(int argc, char* argv[]) {
 
 	////////////////////////////////////////////////////////////////////////////
 
-
+*/
 	return 0 ;
 }
 
