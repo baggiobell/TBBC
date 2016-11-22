@@ -6,7 +6,7 @@
 //
 
 //#ifdef WIN32
-//  #include "stdafx.h" // works for Visual C++ 2010
+  //  #include "stdafx.h" // works for Visual C++ 2010
 //#endif
 
 #include <iostream>
@@ -27,26 +27,17 @@ using namespace std;
 
 //instantiation of a TBBC, first create a type, then an instance of that type
 
-typedef TBBCAES<128,10,0> AES_128_10 ; // define a type AES 
-                                       // which is an instance of TBBCAES
-                                       // 128 is key size
-                                       // 10 is number of rounds
-                                       // 0 is Sbox ID (0 is default AES Sbox)
-                                       //   types are defined in tbbcAES_128m8s.hxx
-                                       //   in sbox() and sboxInverse()
-
-typedef TBBCAES<192,12,0> AES_192_12 ; // define a type AES 
-typedef TBBCAES<256,14,0> AES_256_14 ; // define a type AES
-
-typedef TBBCAES<256,16,1> AES_256_16_1 ; // define a type AES with
-                                         // - added 2 rounds
-                                         // - using a different sbox
-
-typedef TBBCAES<64,5,0> AES_64_10 ; // define a type AES
+typedef TBBCAES<128,10> AES_128_10 ; // define a type AES 
+                                     // which is an instance of TBBCAES
+                                     // 128 is key size
+                                     // 10 is number of rounds
+typedef TBBCAES<192,12> AES_192_12 ; // define a type AES 
+typedef TBBCAES<256,14> AES_256_14 ; // define a type AES
+typedef TBBCAES<64,5> AES_64_10 ; // define a type AES
 
 typedef TBBCBUNNY<6,5> BUNNY_5 ; // define a type BUNNY
 
-typedef TBBC<16,32,3,3,0> TBBC_16_32_3_3 ; // define a type TBBC
+typedef TBBC<16,32,3,3> TBBC_16_32_3_3 ; // define a type TBBC
 
 int main(int argc, char* argv[]) {
 	cout << "|---------------------------------------|\n"
@@ -128,85 +119,6 @@ int main(int argc, char* argv[]) {
 
 	////////////////////////////////////////////////////////////////////////////
 
-	AES_256_16_1 aes_256_16_1 ;
-
-  AES_256_16_1::msgType m256_1 ;
-  AES_256_16_1::keyType k256_1 ;
-  AES_256_16_1::msgType c256_1 ;
-
-	cout << "----------------------------------------------------" << endl ;
-	cout << "AES-256 with 16 rounds and personalized sbox\n"
-       << "PARAMETERS: |m|=128 |k|=256 |n|=16" << endl ;
-	m256_1 = hexTo<bitset<128> >("6bc1bee22e409f96e93d7e117393172a") ;
-	//k256 = hexTo<bitset<256> >("0000000000000000000000000000000000000000000000000000000000000000") ;
-	k256_1 = hexTo<bitset<256> >("603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4") ;
-	cout << "       k = " << bitsetToHex(k256_1) << endl ;
-	c256_1 = aes_256_16_1.encode(m256_1,k256_1) ;
-	cout << "       m = " << bitsetToHex(m256_1) << endl ;
-	cout << "Enc(m,k) = " << bitsetToHex(c256_1) << endl ;
-	cout << "Dec(c,k) = " << bitsetToHex(aes_256_16_1.decode(c256_1,k256_1)) << endl ;
-
-	////////////////////////////////////////////////////////////////////////////
-	//AES_64_10 instantiation
-	AES_64_10 aes_64_10 ; //declare a variable of the type "AES_64_10"
-
-  AES_64_10::msgType m64 ;
-  AES_64_10::keyType k64 ;
-  AES_64_10::msgType c64 ;
-
-	cout << "----------------------------------------------------" << endl ;
-	cout << "AES-64 (Non-standard scheme)\n"
-       << "PARAMETERS: |m|=128 |k|=64 |n|=5" << endl ;
-	m64 = hexTo<bitset<128> >("e93d7e117393172ae93d7e117393172a") ;
-	k64 = hexTo<bitset<64> >("0102030405060708") ;
-
-	cout << "       k = " << bitsetToHex(k64) << endl ;
-	c64 = aes_64_10.encode(m64,k64) ;
-	cout << "       m = " << bitsetToHex(m128) << endl ;
-	cout << "Enc(m,k) = " << bitsetToHex(c64) << endl ;
-	cout << "Dec(c,k) = " << bitsetToHex(aes_64_10.decode(c64,k64)) << endl ;
-
-	////////////////////////////////////////////////////////////////////////////
-
-	//BUNNY_5 instantiation
-	BUNNY_5 bunny_5 ; // declare a variable of the type "BUNNY_5"
-
-  BUNNY_5::msgType m24 ;
-  BUNNY_5::keyType k24 ;
-  BUNNY_5::msgType c24 ;
-
-	cout << "----------------------------------------------------" << endl ;
-	cout << "BUNNY-24 (Non-standard scheme)\n"
-       << "PARAMETERS: |m|=24 |k|=24 |n|=5" << endl ;
-	m24 = hexTo<bitset<24> >("e93d7e") ;
-	k24 = hexTo<bitset<24> >("010203") ;
-
-	cout << "       k = " << bitsetToHex(k24) << endl ;
-	c24 = bunny_5.encode(m24,k24) ;
-	cout << "       m = " << bitsetToHex(m24) << endl ;
-	cout << "Enc(m,k) = " << bitsetToHex(c24) << endl ;
-	cout << "Dec(c,k) = " << bitsetToHex(bunny_5.decode(c24,k24)) << endl ;
-
-	////////////////////////////////////////////////////////////////////////////
-
-	//TBBC_16_32_3_3 instantiation
-	TBBC_16_32_3_3 tbbc ; // declare a variable of the type "TBBC_16_32_3_3"
-
-  TBBC_16_32_3_3::msgType m ;
-  TBBC_16_32_3_3::keyType k ;
-  TBBC_16_32_3_3::msgType c ;
-
-	cout << "----------------------------------------------------" << endl ;
-	cout << "TBBC-16-32-3-3 (Identity cipher)\n"
-       << "PARAMETERS: |m|=16 |k|=32 |sbox|=3 |n|=5" << endl ;
-	m = hexTo<bitset<16> >("01ab") ;
-	k = hexTo<bitset<32> >("0123abcd") ;
-
-	cout << "       k = " << bitsetToHex(k) << endl ;
-	c = tbbc.encode(m,k) ;
-	cout << "       m = " << bitsetToHex(m) << endl ;
-	cout << "Enc(m,k) = " << bitsetToHex(c) << endl ;
-	cout << "Dec(c,k) = " << bitsetToHex(tbbc.decode(c,k)) << endl ;
 
 	return 0 ;
 }

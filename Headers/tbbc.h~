@@ -55,7 +55,7 @@ This class allows to instantiate a block cipher working on nb_msg bits,
 with a master key of nb_key bits, whose s-boxes take input of nb_sbox bits, 
 and with nround rounds.
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround>
 class TBBC {
   public:
     /*! Is the type of a message string (eg, bitset<128>, bitset<24>, etc..) */

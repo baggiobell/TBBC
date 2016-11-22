@@ -10,7 +10,7 @@ This class allows to instantiate a block cipher working on 24 bits,
 with a master key of 24 bits, whose s-boxes take input of nb_sbox bits, 
 and with nround rounds.
 */
-template <unsigned nb_sbox, unsigned nround>
+template <unsigned nb_sbox, unsigned nround, unsigned sboxid>
 class TBBCBUNNY : public TBBC<24, 24, nb_sbox, nround, 0> {
 public:
 

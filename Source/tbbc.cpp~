@@ -141,7 +141,7 @@ int main(int argc, char* argv[]) {
 	//k256 = hexTo<bitset<256> >("0000000000000000000000000000000000000000000000000000000000000000") ;
 	k256_1 = hexTo<bitset<256> >("603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4") ;
 	cout << "       k = " << bitsetToHex(k256_1) << endl ;
-	c256_1 = aes_256_16_1.encode(m256_1,k256_1) ;
+	c256 = aes_256_16_1.encode(m256_1,k256_1) ;
 	cout << "       m = " << bitsetToHex(m256_1) << endl ;
 	cout << "Enc(m,k) = " << bitsetToHex(c256_1) << endl ;
 	cout << "Dec(c,k) = " << bitsetToHex(aes_256_16_1.decode(c256_1,k256_1)) << endl ;

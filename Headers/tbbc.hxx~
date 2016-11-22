@@ -25,7 +25,7 @@ TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::TBBC(){
 /////////////////////////////////////////////////
 
 //!Print to the terminal the current parameters of the block cipher.
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 void
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::printParameter() {
@@ -49,7 +49,7 @@ from a string of type msgType and insert them in a string of type sboxType.
 Exits from program if the position pos is negative or greater 
 then the size of msgType minus the size of sboxType.
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::sboxType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::extractBlock( unsigned nblk, msgType x ) {
@@ -69,7 +69,7 @@ from a string of type keyType and insert them in a string of type sboxType.
 Exits from program if the position pos is negative or greater 
 then the size of keyType minus the size of sboxType.
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::sboxType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::extractKeyBlock( unsigned nblk, keyType x ) {
@@ -81,7 +81,7 @@ TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::extractKeyBlock( unsigned nblk, k
 /*! Extracts from word of type wordType nb_sbox bits and return 
 them as an sboxType.
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::sboxType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::extractFromWordToSboxType( unsigned pos, wordType x ) {
@@ -106,7 +106,7 @@ Copies the bitset x in m in the block nblk of m
 
 - OUTPUT: the new copy of m.
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::msgType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::insertBlock( msgType m, unsigned nblk, sboxType x ) {
@@ -121,7 +121,7 @@ TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::insertBlock( msgType m, unsigned 
 
 - OUTPUT: the new copy of m.
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::msgType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::copyIntoRoundKey(msgType m, unsigned pos, wordType x){
@@ -140,7 +140,7 @@ TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::copyIntoRoundKey(msgType m, unsig
 - OUTPUT: the new copy of m.
 */
 
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::wordType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::copyIntoWord(wordType m, unsigned pos, sboxType x){
@@ -157,7 +157,7 @@ TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::copyIntoWord(wordType m, unsigned
 
 - OUTPUT: a string y of 32 bits.
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::wordType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::extractWord( unsigned pos, keyType x ) {
@@ -183,7 +183,7 @@ TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::extractWord( unsigned pos, keyTyp
 
 - OUTPUT: an (encrypted) message c of the same type as m.
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::msgType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::encode( msgType m, keyType k ) {
@@ -216,7 +216,7 @@ TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::encode( msgType m, keyType k ) {
 
 - OUTPUT: an (decrypted) message c of the same type as m.
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::msgType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::decode (msgType m, keyType k) {
@@ -246,7 +246,7 @@ TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::decode (msgType m, keyType k) {
 /*!
 Empty function
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 void TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::keySchedule(keyType k) {
 
@@ -262,7 +262,7 @@ void TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::keySchedule(keyType k) {
 /*!
 Identity function
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::msgType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::addRoundKey (msgType m, msgType k){
@@ -278,7 +278,7 @@ TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::addRoundKey (msgType m, msgType k
 /*!
 Identity function
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::msgType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::sBox (msgType m){
@@ -291,7 +291,7 @@ TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::sBox (msgType m){
 /*!
 Identity function
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::msgType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::sBoxInverse (msgType m){
@@ -304,7 +304,7 @@ TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::sBoxInverse (msgType m){
 /*!
 Identity function
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::sboxType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::sbox(unsigned nbox, sboxType x) {
@@ -316,7 +316,7 @@ TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::sbox(unsigned nbox, sboxType x) {
 /*!
 Identity function
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::sboxType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::sboxInverse(unsigned nbox, sboxType x) {
@@ -331,7 +331,7 @@ TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::sboxInverse(unsigned nbox, sboxTy
 /*!
 Identity function
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::msgType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::mixingLayer (msgType m){
@@ -344,7 +344,7 @@ TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::mixingLayer (msgType m){
 /*!
 Identity function
 */
-template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, unsigned sboxid>
+template <unsigned nb_msg, unsigned nb_key, unsigned nb_sbox, unsigned nround, sboxid>
 inline
 typename TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::msgType
 TBBC<nb_msg, nb_key, nb_sbox, nround, sboxid>::mixingLayerInverse (msgType m){

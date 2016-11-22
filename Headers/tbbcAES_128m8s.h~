@@ -14,10 +14,10 @@ with a master key of nb_key bits, whose s-box take input of 8 bits,
 and with nround rounds.
 */
 template <unsigned nb_key, unsigned nround, unsigned sboxid>
-class TBBCAES : public TBBC<128, nb_key, 8, nround, sboxid> {
+class TBBCAES : public TBBC<128,nb_key,8,nround, sboxid> {
 public:
 
-  typedef TBBC<128, nb_key, 8, nround, sboxid> TBBC128_8 ;
+  typedef TBBC<128,nb_key,8,nround, sboxid> TBBC128_8 ;
 
   typedef typename TBBC128_8::msgType      msgType ;
   typedef typename TBBC128_8::keyType      keyType ;
